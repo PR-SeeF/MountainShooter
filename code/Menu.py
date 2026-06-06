@@ -6,10 +6,11 @@ import pygame.image
 from pygame import Surface, Rect
 from pygame.font import Font
 
-from code.Const import WINDOW_WIDTH, WINDOW_HEIGHT
+from code.Const import WINDOW_WIDTH, COLOR_WHITE, COLOR_ORANGE, MENU_OPTION
 
 
 class Menu:
+
     def __init__(self, window):
         self.window = window
         self.surf = pygame.image.load('./asset/MenuBg.png')
@@ -18,12 +19,19 @@ class Menu:
     def run(self, ):
         pygame.mixer.music.load('./asset/Menu.mp3')
         pygame.mixer.music.play(-1)
-        while True:
-            self.window.blit(source=self.surf, dest=self.rect)
-            self.menu_text(text_size=50, text_color=(255, 128, 0), text="MOUNTAIN", text_center_pos=(WINDOW_WIDTH / 2, 70))
-            self.menu_text(text_size=50, text_color=(255, 128, 0), text="SHOOTER",  text_center_pos=(WINDOW_WIDTH / 2, 120))
-            pygame.display.flip()
 
+        while True:
+
+            self.menu_text(text_size=50, text_color=COLOR_ORANGE, text="MOUNTAIN",
+                           text_center_pos=((WINDOW_WIDTH / 2), 70))
+            self.menu_text(text_size=50, text_color=COLOR_ORANGE, text="SHOOTER",
+                           text_center_pos=((WINDOW_WIDTH / 2), 120))
+
+            for i in range(len(MENU_OPTION)):
+                self.menu_text(text_size=20, text=MENU_OPTION[i], text_color=COLOR_WHITE, text_center_pos=((WINDOW_WIDTH / 2), 200 + i * 20))
+
+
+            pygame.display.flip()
             # event check
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
