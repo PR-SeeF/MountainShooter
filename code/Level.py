@@ -1,17 +1,18 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 import random
-from random import choice
 
 from pygame.font import Font
 
 import pygame
 from pygame import quit, Surface, Rect
 
-from EntityMediator import EntityMediator
+from code.Enemy import Enemy
+from code.EntityMediator import EntityMediator
 from code.Const import COLOR_WHITE, WINDOW_HEIGHT, MENU_OPTION, EVENT_ENEMY
 from code.Entity import Entity
 from code.EntityFactory import EntityFactory
+from code.Player import Player
 
 
 class Level:
@@ -37,7 +38,11 @@ class Level:
             for ent in self.entity_list:
                 self.window.blit(source=ent.surf, dest=ent.rect)
                 ent.move()
-            pygame.display.flip()
+                if isinstance(ent, (Player, Enemy)):
+                    shoot = ent.shoot()
+                    if shoot is not None:
+                        self.entity_list.append(shoot)
+
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()  # close window
@@ -45,7 +50,6 @@ class Level:
                 if event.type ==  EVENT_ENEMY:
                     choice = random.choice(('Enemy2', 'Enemy1'))
                     self.entity_list.append(EntityFactory.get_entity(choice))
-
             # printed text
             self.level_text(14, f' {self.name} - Timeout: {self.timeout / 1000 : .1f}s', COLOR_WHITE, (10, 15))
             self.level_text(14, f'fps: {clock.get_fps(): .0f}s', COLOR_WHITE, (10, WINDOW_HEIGHT - 35))
