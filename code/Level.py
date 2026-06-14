@@ -13,6 +13,7 @@ from code.Const import COLOR_WHITE, WINDOW_HEIGHT, MENU_OPTION, EVENT_ENEMY
 from code.Entity import Entity
 from code.EntityFactory import EntityFactory
 from code.Player import Player
+from code.PlayerShot import PlayerShot
 
 
 class Level:
@@ -34,14 +35,20 @@ class Level:
         pygame.mixer.music.play(-1)
         clock = pygame.time.Clock()
         while True:
+            self.window.fill((0, 0, 0))
             clock.tick(60)
             for ent in self.entity_list:
-                self.window.blit(source=ent.surf, dest=ent.rect)
                 ent.move()
+                self.window.blit(source=ent.surf, dest=ent.rect)
+
                 if isinstance(ent, (Player, Enemy)):
                     shoot = ent.shoot()
+
                     if shoot is not None:
+
                         self.entity_list.append(shoot)
+
+
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:

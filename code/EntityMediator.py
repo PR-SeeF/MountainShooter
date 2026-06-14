@@ -12,10 +12,10 @@ class EntityMediator:
             if ent.rect.right <= 0:
                 ent.health = 0
         if isinstance(ent, PlayerShot):
-            if ent.rect.lefth <= WINDOW_WIDTH:
+            if ent.rect.right >= WINDOW_WIDTH:
                 ent.health = 0
         if isinstance(ent, EnemyShot):
-            if ent.rect.left <= WINDOW_WIDTH:
+            if ent.rect.right <= 0:
                 ent.health = 0
 
     @staticmethod
@@ -26,6 +26,6 @@ class EntityMediator:
 
     @staticmethod
     def verify_health(entity_List: list[Entity]):
-        for ent in entity_List:
-            if ent.health <= 0:
-                entity_List.remove(ent)
+
+        entity_List[:] = [ent for ent in entity_List if ent.health > 0]
+

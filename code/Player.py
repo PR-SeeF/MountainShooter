@@ -7,6 +7,7 @@ from code.PlayerShot import PlayerShot
 
 
 class Player(Entity):
+
     def __init__(self, name: str, position: tuple):
         super().__init__(name, position)
         self.shot_delay = Const.ENTITY_SHOT_DELAY[self.name]
@@ -24,9 +25,9 @@ class Player(Entity):
         pass
 
     def shoot(self):
-        self.shot_delay = -1
-        if self.shot_delay == 0:
-            self.shot_delay = Const.ENTITY_SHOT_DELAY[self.name]
+        self.shot_delay -= 1
+        if self.shot_delay  <=  0:
             pressed_key = pygame.key.get_pressed()
             if pressed_key[Const.PLAYER_SHOOT[self.name]]:
+                self.shot_delay = Const.ENTITY_SHOT_DELAY[self.name]
                 return PlayerShot(name = f'{self.name}Shot', position= (self.rect.centerx, self.rect.centery))
