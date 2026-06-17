@@ -22,7 +22,7 @@ class Player(Entity):
             self.rect.centerx -= Const.ENTITY_SPEED[self.name]
         if press_key[Const.PLAYER_RIGHT[self.name]] and self.rect.right < Const.WINDOW_WIDTH:
             self.rect.centerx += Const.ENTITY_SPEED[self.name]
-        pass
+
 
     def shoot(self):
         self.shot_delay -= 1

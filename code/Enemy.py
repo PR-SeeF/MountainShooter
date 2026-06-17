@@ -5,7 +5,7 @@ import pygame
 from code import Const
 from code.EnemyShot import EnemyShot
 from code.Entity import Entity
-from code.Const import WINDOW_WIDTH, ENTITY_SPEED
+from code.Const import ENTITY_SPEED
 
 
 class Enemy(Entity):
