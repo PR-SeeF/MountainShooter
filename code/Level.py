@@ -17,7 +17,7 @@ from code.PlayerShot import PlayerShot
 
 
 class Level:
-    def __init__(self, window, name, game_mode, player_score: list[int]):
+    def __init__(self, window, name, game_mode, player_score: list[int], player_health: list[int]):
         self.timeout = 20000  # 20 sec
         self.window = window
         self.name = name
@@ -25,16 +25,22 @@ class Level:
         self.entity_list: list[Entity] = []
         self.entity_list.extend(EntityFactory.get_entity(self.name + 'Bg'))
         player = EntityFactory.get_entity('Player1')
-        player.score = player_score = [0]
+        player.score = player_score[0]
+        print(player_health)
+        player.health = player_health[0]
+        print(player_health)
+        print(player.score, player.health)
         self.entity_list.append(player)
+
         if game_mode in [MENU_OPTION[1], MENU_OPTION[2]]:
             player = EntityFactory.get_entity('Player2')
-            player.score = player_score = [1]
+            player.score = player_score[1]
+            player.health = player_health[1]
             self.entity_list.append(player)
         pygame.time.set_timer(EVENT_ENEMY, 2000)
         pygame.time.set_timer(EVENT_TIMEOUT, 100)
 
-    def run(self, player_score: list[int]):
+    def run(self, player_score: list[int], player_health: list[int]):
         pygame.mixer.music.load(f'./asset/{self.name}.mp3')
         pygame.mixer.music.play(-1)
         clock = pygame.time.Clock()
@@ -45,14 +51,17 @@ class Level:
                 ent.move()
                 self.window.blit(source=ent.surf, dest=ent.rect)
 
+                if ent.name == 'Player1':
+                    self.level_text(14, f'Player1 : {ent.health} | Score: {ent.score}', COLOR_GREEN,
+                                    (10, 30))
+                if ent.name == 'Player2':
+                    self.level_text(14, f'Player2 : {ent.health} | Score: {ent.score}', COLOR_CIAN,
+                                    (10, 40))
+
                 if isinstance(ent, (Player, Enemy)):
                     shoot = ent.shoot()
                     if shoot is not None:
                         self.entity_list.append(shoot)
-                if ent.name == 'Player1':
-                    self.level_text(14, f'Player1 : {ent.health} | Score: {ent.score}', COLOR_GREEN, (10, 30))
-                if ent.name == 'Player2':
-                    self.level_text(14, f'Player2 : {ent.health} | Score: {ent.score}', COLOR_CIAN, (10, 40))
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -61,15 +70,23 @@ class Level:
                 if event.type == EVENT_ENEMY:
                     choice = random.choice(('Enemy2', 'Enemy1'))
                     self.entity_list.append(EntityFactory.get_entity(choice))
+
+
                 if event.type == EVENT_TIMEOUT:
                     self.timeout -= 100
-                    if self.timeout <= 0:
+                    if self.timeout == 0:
                         for ent in self.entity_list:
                             if isinstance(ent, Player) and ent.name == 'Player1':
                                 player_score[0] = ent.score
+                                player_health[0] = ent.health
                             if isinstance(ent, Player) and ent.name == 'Player2':
                                 player_score[1] = ent.score
+                                player_health[1] = ent.health
                         return True
+
+
+
+
 
                 found_player = False
                 for ent in self.entity_list:
@@ -79,6 +96,7 @@ class Level:
                     return False
 
             # printed text
+
             self.level_text(14, f'{self.name} - Timeout: {self.timeout / 1000 : .1f}s', COLOR_WHITE, (10, 15))
             self.level_text(14, f'fps: {clock.get_fps(): .0f}s', COLOR_WHITE, (10, WINDOW_HEIGHT - 35))
             self.level_text(14, f'entidades {len(self.entity_list)}', COLOR_WHITE, (10, WINDOW_HEIGHT - 20))

@@ -11,17 +11,6 @@ from code.PlayerShot import PlayerShot
 class EntityMediator:
 
     @staticmethod
-    def __score(enemy : Enemy, entity_list : list[Entity]):
-        if enemy.last_damage == 'Player1Shot':
-            for ent in entity_list:
-                if ent.name == 'Player1':
-                    ent.score += ent.score
-        elif enemy.last_damage == 'Player2Shot':
-            for ent in entity_list:
-                if ent.name == 'Player2':
-                    ent.score += ent.score
-
-    @staticmethod
     def __verify_collision_window(ent: Entity):
         if isinstance(ent, Entity):
             if ent.rect.right <= 0:
@@ -55,6 +44,9 @@ class EntityMediator:
                 ent2.last_damage = ent1.name
                 ent1.last_damage = ent2.name
 
+
+
+
     @staticmethod
     def verify_collision(entity_List: list[Entity]):
         for i in range(len(entity_List)):
@@ -68,6 +60,18 @@ class EntityMediator:
     def verify_health(entity_List: list[Entity]):
         for ent in entity_List:
             if ent.health <= 0:
-                if isinstance(ent, Entity):
+                if isinstance(ent, Enemy):
                     EntityMediator.__score(ent, entity_List)
                 entity_List.remove(ent)
+    @staticmethod
+    def __score(enemy: Enemy, entity_list: list[Entity]):
+        if enemy.last_damage == 'Player1Shot':
+            for ent in entity_list:
+                if ent.name == 'Player1':
+                    print(type(ent.score), ent.score)
+                    print(type(enemy.score), enemy.score)
+                    ent.score += enemy.score
+        elif enemy.last_damage == 'Player2Shot':
+            for ent in entity_list:
+                if ent.name == 'Player2':
+                    ent.score += enemy.score
