@@ -26,10 +26,7 @@ class Level:
         self.entity_list.extend(EntityFactory.get_entity(self.name + 'Bg'))
         player = EntityFactory.get_entity('Player1')
         player.score = player_score[0]
-        print(player_health)
         player.health = player_health[0]
-        print(player_health)
-        print(player.score, player.health)
         self.entity_list.append(player)
 
         if game_mode in [MENU_OPTION[1], MENU_OPTION[2]]:

@@ -33,7 +33,7 @@ class EntityMediator:
             valid_Collision = True
         elif isinstance(ent1, EnemyShot) and isinstance(ent2, Player):
             valid_Collision = True
-            print(valid_Collision)
+
         if valid_Collision == True:
             if (ent1.rect.right >= ent2.rect.left
                     and ent1.rect.left <= ent2.rect.right
