@@ -68,8 +68,6 @@ class EntityMediator:
         if enemy.last_damage == 'Player1Shot':
             for ent in entity_list:
                 if ent.name == 'Player1':
-                    print(type(ent.score), ent.score)
-                    print(type(enemy.score), enemy.score)
                     ent.score += enemy.score
         elif enemy.last_damage == 'Player2Shot':
             for ent in entity_list:

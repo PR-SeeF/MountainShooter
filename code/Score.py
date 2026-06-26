@@ -1,7 +1,7 @@
 from datetime import datetime
 
 import pygame
-from pygame import Surface, Rect
+from pygame import Surface, Rect, KEYDOWN, K_ESCAPE
 from pygame.font import Font
 
 from code.Const import COLOR_YELLOW, SCORE_POSITION, MENU_OPTION, COLOR_WHITE
@@ -9,10 +9,10 @@ from code.DBProxy import DBProxy
 
 
 def get_formatted_date():
-        current_datetime = datetime.now()
-        current_time = current_datetime.strftime("%H:%M")
-        current_date = current_datetime.strftime("%d/%m/%y")
-        return f"{current_time} - {current_date}"
+    current_datetime = datetime.now()
+    current_time = current_datetime.strftime("%H:%M")
+    current_date = current_datetime.strftime("%d/%m/%y")
+    return f"{current_time} - {current_date}"
 
 
 class Score:
@@ -28,12 +28,15 @@ class Score:
         pygame.mixer.music.play(-1)
         db_proxy = DBProxy('DBScore')
         name = ''
+
         while True:
             self.window.blit(source=self.surf, dest=self.rect)
-            self.score_text(text_size=50, text='YOU WINN !!!!!', text_color=COLOR_YELLOW, text_pos= SCORE_POSITION['Title'])
-            if menu_return ==  MENU_OPTION[0]:
+            self.score_text(text_size=50, text='YOU WINN !!!!!', text_color=COLOR_YELLOW,
+                            text_pos=SCORE_POSITION['Title'])
+            text = 'Enter your name (3 characters)'
+            score = player_score[0]
+            if menu_return == MENU_OPTION[0]:
                 score = player_score[0]
-                text = 'Enter your name (3 characters)'
             if menu_return == MENU_OPTION[1]:
                 score = (player_score[0] + player_score[1]) / 2
                 text = 'Enter Team name (3 characters)'
@@ -79,12 +82,12 @@ class Score:
                             SCORE_POSITION[list_score.index(player_score)])
         while True:
             for event in pygame.event.get():
+                if event.type == KEYDOWN:
+                    if event.key == K_ESCAPE:
+                        return
                 if event.type == pygame.QUIT:
                     pygame.quit()  # close window
                     quit()  # end pygame
-                    if event.type == KEYDOWN:
-                        if event.key == K_ESCAPE:
-                            return
             pygame.display.flip()
 
     def score_text(self, text_size: int, text: str, text_color: tuple, text_pos: tuple):
@@ -92,4 +95,3 @@ class Score:
         text_surf: Surface = text_font.render(text, True, text_color).convert_alpha()
         text_rect: Rect = text_surf.get_rect(left=text_pos[0], top=text_pos[1])
         self.window.blit(source=text_surf, dest=text_rect)
-
